@@ -106,7 +106,23 @@ function Chatbot() {
     setIsLoading(true);
 
     try {
-      const result = await sendChatMessage(value);
+      const role =
+        sessionStorage.getItem("userRole") ||
+        localStorage.getItem("userRole") ||
+        "admin";
+      const userEmail =
+        sessionStorage.getItem("userEmail") ||
+        localStorage.getItem("userEmail") ||
+        "";
+      const lastUserMsg = messages
+        .filter((m) => m.sender === "user")
+        .slice(-1)[0]?.text;
+
+      const result = await sendChatMessage(value, {
+        role,
+        userEmail,
+        context: { previousQuery: lastUserMsg },
+      });
 
       const botReply =
         result.message ||
@@ -827,6 +843,7 @@ function Chatbot() {
                             leading-5
                             text-slate-700
                             shadow-[0_4px_16px_rgba(15,23,42,0.06)]
+                            whitespace-pre-wrap
                           "
                         >
                           {msg.text}
@@ -849,6 +866,7 @@ function Chatbot() {
                         leading-5
                         text-white
                         shadow-[0_7px_20px_rgba(37,99,235,0.20)]
+                        whitespace-pre-wrap
                       "
                     >
                       {msg.text}
