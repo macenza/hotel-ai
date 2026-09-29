@@ -62,7 +62,7 @@ export const segmentCustomer = async (data) => {
 // HOTEL AI CHATBOT
 // =====================================================
 
-export const sendChatMessage = async (message) => {
+export const sendChatMessage = async (message, options = {}) => {
   const response = await fetch(
     "/api/chatbot",
     {
@@ -72,6 +72,9 @@ export const sendChatMessage = async (message) => {
       },
       body: JSON.stringify({
         message,
+        role: options.role,
+        userEmail: options.userEmail,
+        context: options.context,
       }),
     }
   );
